@@ -1,3 +1,5 @@
-export {default as jobRouter} from './jobsRouter.js';
-export {default as employeesRouter} from './employeesRouter.js';
-export {default as usersRouter} from './usersRouter.js';
+import jobsRouter from './jobsRouter.js';
+import employeesRouter from './employeesRouter.js';
+import customersRouter from './customersRouter.js';
+
+export { jobsRouter, employeesRouter, customersRouter }
