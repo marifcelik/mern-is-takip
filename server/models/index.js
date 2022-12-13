@@ -1,2 +1,5 @@
-export {default as userModel} from './userModel.js';
-export {default as jobModel} from './jobModel.js';
+import User from './employeeModel.js';
+import Job from './jobModel.js';
+import Employee from './employeeModel';
+
+export { User, Job, Employee }
