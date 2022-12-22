@@ -1,5 +1,6 @@
-import User from './employeeModel.js';
-import Job from './jobModel.js';
 import Employee from './employeeModel.js';
+import Customer from './customerModel.js';
+import Note from "./noteModel.js";
+import Job from './jobModel.js';
 
-export { User, Job, Employee }
+export { Customer, Job, Employee, Note }

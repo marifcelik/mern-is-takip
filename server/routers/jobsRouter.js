@@ -1,10 +1,23 @@
 import express from 'express';
 import Job from '../models/jobModel.js';
+import handleError from './errorHandler.js';
 
 const router = express.Router();
 
+router.get('/sorgu/:email', async (req, res) => {
+    try {
+        const { email } = req.params;
+        const data = await Job.find({ email });
+        if (!data) return res.status(404).json({ message: 'job not found' });
+        res.status(200).json({ message: 'başarılı', data });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'server error', error: err.toString() });
+    }
+});
+
 router.get('/', async (req, res) => {
-    try {   
+    try {
         const data = await Job.find();
         res.status(200).json({ message: 'başarılı', data });
     } catch (err) {
@@ -30,8 +43,8 @@ router.patch('/edit', async (req, res) => {
     res.end('yapılacak');
 })
 
-router.delete('/rm/:id', async (req, res) => {
-    const id = req.params.id;
+router.delete('/rm', async (req, res) => {
+    const id = req.body.id;
     try {
         let data = await Job.findById(id);
         if (!data)

@@ -1,41 +1,56 @@
 import express from 'express';
-import * as bcrypt from 'bcrypt';
-import { User } from '../models/index.js';
+import Customer from '../models/customerModel.js';
+import handleError from './errorHandler.js';
 
 const router = express.Router();
 
-router.post('/register', async (req, res) => {
+router.get('/', async (req, res) => {
     try {
-        let { username, password, phone } = req.body;
-        const userExits = await User.findOne({ username });
-        if (userExits)
-            return res.status(409).json({ message: 'user already exists.' });
-
-        password = await bcrypt.hash(password, 10);
-        const data = await User.create({ username, password, phone, role: 'USER' });
-        res.status(201).json({ message: 'kayıt başarılı', data });
+        const customers = await Customer.find();
+        res.status(200).json(customers);
     } catch (err) {
-        console.error(err);
-        res.status(502).json({ message: 'kayıt esnasında sorun oluştu', error: new Error(err) })
+        const { code, errors } = handleError(err)
+        res.status(code).json({ message: 'kayıt esnasında bir hata oluştu', errors });    }
+});
+
+router.post('/add', async (req, res) => {
+    try {
+        const data = req.body;
+        if (!data) return res.status(400).json({ message: 'really bad request' })
+        console.log('customermodeli', Object.keys(Customer.schema.paths));
+        if (Object.keys(data).length > Object.keys(Customer.schema.paths).length - 6) {
+            return res.status(418).json({ message: 'too many arguments' });
+        }
+        const customer = await Customer.create(data);
+
+        res.status(200).json({ message: 'successful', data: customer });
+    } catch (err) {
+        const { code, errors } = handleError(err)
+        res.status(code).json({ message: 'kayıt esnasında bir hata oluştu', errors });
     }
 });
 
-router.post('/login', async (req, res) => {
+router.patch('/edit', async (req, res) => {
     try {
-        const { username, password } = req.body;
-        const user = await User.findOne({ username });
-        if (!user)
-            return res.status(400).json({ message: 'user not exists.' });
+        const data = req.body;
+        const customer = await Customer.findOneAndUpdate({ email: data.email }, data);
+        res.status(200).json({ message: 'güncellendi', id: customer._id })
+    } catch (error) {
+        const { code, errors } = handleError(error);
+        res.status(code).json({ message: 'düzenleme hatası', errors })
+    }
+});
 
-        const isPasswordCorrect = await bcrypt.compare(password, user.password);
-        if (!isPasswordCorrect)
-            return res.status(401).json({ message: 'password not correct' });
-
-        res.status(200).json({ message: 'successful' });
+router.delete('rm', async (req, res) => {
+    try {
+        const { email } = req.body
+        const customer = await Customer.findOneAndDelete({ email });
+        if (!customer) return res.status(400).json({ message: 'user not found' })
+        res.status(206).json({ message: 'başarılı', id: customer._id })
     } catch (err) {
-        console.error(err);
-        res.status(501).json({ message: 'giriş esnasında bir hata oluştu', error: err.toString() });
+        const { code, errors } = handleError(err);
+        res.status(code).json({ message: 'silme hatası', errors })
     }
 })
 
-export default router;
+export default router
