@@ -1,19 +1,21 @@
+import { useState } from 'react';
 import { Form, Button, FloatingLabel, Row, Col } from 'react-bootstrap'
 import { NavLink } from 'react-router-dom'
 import { AppContext } from '../context';
 
 function RegisterForm() {
-    const { validated, setValidated, setFormdata, formdata } = AppContext();
+    const [formdata, setFormdata] = useState({});
+    const { validated, setValidated } = AppContext();
 
     async function handleSubmit(e) {
         e.preventDefault();
         setValidated(true);
 
         if (e.currentTarget.checkValidity()) {
-            const request = await fetch('http://localhost:3020/api/register', {
+            const request = await fetch(`${import.meta.env.VITE_API_URL}/register`, {
                 method: 'POST',
-                credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
                 body: JSON.stringify(formdata)
             })
             const data = await request.json();
@@ -38,7 +40,7 @@ function RegisterForm() {
                         <FloatingLabel label="Soyad" className='mb-3'>
                             <Form.Control type="text" placeholder="Soyad" required onChange={e => setFormdata({ ...formdata, surname: e.target.value })} />
                             <Form.Control.Feedback type="invalid">
-                            Lütfen geçerli bir soyad girin                                
+                                Lütfen geçerli bir soyad girin
                             </Form.Control.Feedback>
                         </FloatingLabel>
                     </Col>
@@ -56,7 +58,7 @@ function RegisterForm() {
                         <FloatingLabel label="Parola" className='mb-3'>
                             <Form.Control type="password" placeholder="Parola" required onChange={e => setFormdata({ ...formdata, password: e.target.value })} />
                             <Form.Control.Feedback type="invalid">
-                            Lütfen en az 8 haneli bir parola girin                
+                                Lütfen en az 8 haneli bir parola girin
                             </Form.Control.Feedback>
                         </FloatingLabel>
                     </Col>
@@ -74,17 +76,17 @@ function RegisterForm() {
                         <FloatingLabel label="Doğum Tarihi" className='mb-3'>
                             <Form.Control type="date" placeholder="Doğum Tarihi" onChange={e => setFormdata({ ...formdata, birthday: e.target.value })} />
                             <Form.Control.Feedback type="invalid">
-                            Lütfen en az 8 haneli bir parola girin                
+                                Lütfen en az 8 haneli bir parola girin
                             </Form.Control.Feedback>
                         </FloatingLabel>
                     </Col>
                 </Row>
-                    <div className="d-grid gap-2">
-                        <Button className='mb-4' variant="outline-secondary" type="submit">
-                            Kayıt ol
-                        </Button><br />
-                    </div>
-                    <Form.Text className="text-center">Hesabınız var mı ? <NavLink to='/auth'> Giriş yapın </NavLink></Form.Text>
+                <div className="d-grid gap-2">
+                    <Button className='mb-4' variant="outline-secondary" type="submit">
+                        Kayıt ol
+                    </Button><br />
+                </div>
+                <Form.Text className="text-center">Hesabınız var mı ? <NavLink to='/auth'> Giriş yapın </NavLink></Form.Text>
             </Form>
         </Col>
     )

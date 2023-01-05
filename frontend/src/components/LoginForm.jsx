@@ -1,10 +1,11 @@
+import { useState } from 'react';
 import { Form, Button, FloatingLabel, Row, Col } from 'react-bootstrap'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { AppContext } from '../context';
-import { Notification } from '../components/'
 
 function LoginForm() {
-  const { shownot, setShownot, validated, setValidated, setFormdata, formdata, user, setUser, error, setError } = AppContext();
+  const { setShownot, validated, setValidated, setUser, setNotProps } = AppContext();
+  const [formdata, setFormdata] = useState({});
   const navigate = useNavigate();
 
   async function handleSubmit(e) {
@@ -12,27 +13,28 @@ function LoginForm() {
     setValidated(true);
 
     if (e.currentTarget.checkValidity()) {
-      const request = await fetch('http://localhost:3020/api/login', {
+      const request = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formdata)
       })
-      const data = await request.json();
+      const response = await request.json();
 
-      if (data.message === 'success') {
-        setUser({ name: data.name, id: data.id });
+      if (response.message === 'success') {
+        setNotProps({ title: 'başarılı', body: 'Hoşgeldiniz', variant: 'success' })
+        setUser({ name: response.name, id: response.id });
+        setValidated(false)
         navigate('/');
       } else {
-        setError(data)
-        setShownot(!shownot)
+        setNotProps({ title: 'hata', body: response.fail, variant: 'danger' })
       }
+      setShownot(true)
     }
   }
 
   return (
     <>
-      {error && <Notification title='hata' body={error.fail} variant='danger' />}
       <Col xs="7" md="4" className='pt-5 ps-5'>
         <h1 className='mt-5 mb-5 pt-5'>Giriş yap</h1>
         <Form className='mt-5' noValidate validated={validated} onSubmit={handleSubmit}>
