@@ -7,6 +7,7 @@ export default function handleError(err) {
     }
     else if (err.code === 11000) {
         errors = { email: 'email is exist', detail: err.message, value: err.keyValue.email }
+        code = 409;
     }
     else if (err.message.includes('customer validation failed')) {
         Object.values(err.errors).forEach(({ properties }) => {

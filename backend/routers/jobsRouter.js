@@ -4,12 +4,13 @@ import handleError from './errorHandler.js';
 
 const router = express.Router();
 
-router.get('/sorgu/:email', async (req, res) => {
+router.get('/:id', async (req, res) => {
     try {
-        const { email } = req.params;
-        const data = await Job.find({ email });
-        if (!data) return res.status(404).json({ message: 'job not found' });
-        res.status(200).json({ message: 'başarılı', data });
+        const { id } = req.params;
+        const data = await Job.find({ cutomer: id }).select(['title', 'done']).lean();
+        if (!data)
+            return res.status(404).json({ message: 'job not found' });
+        res.status(200).json({ message: 'id ile arama başarılı', data });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'server error', error: err.toString() });
@@ -30,7 +31,6 @@ router.put('/add', async (req, res) => {
     const { title, details } = req.body;
     try {
         let data = await Job.create({ title, details });
-        console.log(data);
         res.status(201).json({ message: 'created', data });
     } catch (err) {
         console.error(err);
