@@ -10,7 +10,7 @@ Bu projede Back-end için Node.js ve Express kullandım. Database kısmında Mon
 ### API
 
 ---
-**[/employees](./server/models/employeesRouter.js)**
+**[/employees](./backend/models/employeesRouter.js)**
 > Çalışanları aslında iki kısım olarak tanımlamıştım. ADMIN ve USER. USER normal çalışanları temsil edecekti ve sadece kendisiyle ilişkilendirilen işler için yetkisi olacaktı, ADMIN ise genel yöneticiyi temsil edecekti. Ancak bunu yetiştiremedim ve şu an tek bir admin tüm işleri yönetiyor durumda
 
 | link    | istek türü | açıklama         |
@@ -20,7 +20,7 @@ Bu projede Back-end için Node.js ve Express kullandım. Database kısmında Mon
 | `/edit` | PATCH      | TODO             |
 | `/rm`   | DELETE     | TODO             |
 
-**[/jobs](./server/models/jobsRouter.js)**  
+**[/jobs](./backend/models/jobsRouter.js)**  
 > İşler kendi içerisinde notların id' sini barındırır. 
 
 | link            | istek türü | açıklama                                                    |
@@ -31,7 +31,7 @@ Bu projede Back-end için Node.js ve Express kullandım. Database kısmında Mon
 | `/edit`         | PATCH      | TODO                                                        |
 | `/rm`           | DELETE     | verilen id' ye göre işi siler                               |
   
-**[/customers](./server/models/customersRouter.js)**  
+**[/customers](./backend/models/customersRouter.js)**  
 | link    | istek türü | açıklama                                     |
 | ------- | ---------- | -------------------------------------------- |
 | `/`     | GET        | tüm müşterileri listele                      |
@@ -39,7 +39,7 @@ Bu projede Back-end için Node.js ve Express kullandım. Database kısmında Mon
 | `/edit` | PATCH      | obje içindeki emaile göre müşteri güncelleme |
 | `/rm`   | DELETE     | verilen e mail' e göre müşteriyi siler       |
   
-**[/notes](./server/models/notesRouter.js)**  
+**[/notes](./backend/models/notesRouter.js)**  
 > Notlar database içerisinde ait olduğu iş id'sine göre çağrılır ve en son düzenleyen çalışanın id' sini barındırır.
 
 | link    | istek türü | açıklama                                |
